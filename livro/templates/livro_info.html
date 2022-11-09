@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load filtros %}
+{% block 'conteudo' %}
+    <div class="container">
+        <br>
+
+        {%if status == '1'%}
+        <div class="alert alert-danger" role="alert">
+            Dados invalidos
+          </div>
+        {%endif%}
+
+        <form action="#" method="POST">
+            {% csrf_token %}
+            <p>
+                <label>Nome do livro:</label>
+                <input style="width: 60%;" type="text" class="form-control" value="{{livro.nome}}">
+            </p>
+            <p>
+                <label>Nome do autor:</label>
+                <input style="width: 60%;" type="text" class="form-control" value="{{livro.autor}}">
+            </p>
+            <p>
+                <label>Data de cadastro:</label>
+                <input style="width: 60%;" type="text" class="form-control" value="{{livro.data_cadastro}}">
+            </p>
+            
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">Categoria</label>
+                </div>
+                <select class="custom-select" id="inputGroupSelect01">
+                    {% for i in categoria_livro %}
+                        {% if livro.categoria.nome == i.nome %}
+                            <option selected>{{i}}</option>
+                        {% else %}
+                            <option>{{i}}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            {%if livro.emprestado %}
+                <label class="btn btn-light active">
+                    <input checked type="checkbox" checked autocomplete="off" name="emprestado"> Checked
+                </label>        
+            {% else %}
+                <label class="btn btn-light">
+                <input type="checkbox" checked autocomplete="off" name="emprestado"> Emprestado
+                </label>
+            {% endif %}
+            <br>
+            <br>
+            <input type="submit" class="btn btn-outline-success btn-md" value="Salvar">
+            <button type="button" class="btn btn-outline-danger btn-md" data-toggle="modal" data-target="#Excluir_livroModal">
+                Excluir
+            </button>
+            <button type="button" class="btn btn-outline-danger btn-md" data-toggle="modal" data-target="#Emprestar_livroModal">
+                Emprestar
+          </button>
+        </form>
+        <br>
+        <hr>
+        <h3>Historico de emprestimo</h1>
+            <table class="table table-striped table-dark">
+                <thead>
+                  <tr>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Data do emprestimo</th>
+                    <th scope="col">Data de devolução</th>
+                    <th scope="col">Tempo de duração    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for i in emprestimos %}
+                  <tr>
+                    <th scope="row">{{i.nome_alugado}}</th>
+                    <td>{{i.data_emprestimo}}</td>
+                    <td>{{i.data_devolução}}</td>
+                    <td>{{ i.data_devolução|mostra_duracao:i.data_emprestimo }} Dias</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+    </div>
+    <div class="modal fade" id="Excluir_livroModal" tabindex="-1" role="dialog" aria-labelledby="Excluir_livroModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="Excluir_livroModalLabel">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <h3>Deseja mesmo excluir?</h3>
+              <a class="btn btn-outline-danger" href="{% url 'excluir_livro' id_livro %}">EXCLUIR</a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="Emprestar_livroModal" tabindex="-1" role="dialog" aria-labelledby="Emprestar_livroModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="Emprestar_livroModalLabel">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form action="{%url 'emprestar_livro'%}" method="POST">
+                {% csrf_token %}
+  
+                <table>
+                  {{form_emprestimo.as_table}}
+                </table>
+                <input type="submit" class="btn btn-outline-success btn-sm">
+  
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+{% endblock %}
