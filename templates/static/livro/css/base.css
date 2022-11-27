@@ -1,0 +1,30 @@
+
+header, navbar {
+    background-color: #3EC1D5;
+  }
+  
+  #nav-container {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  
+  #logo {
+    width: 50px;
+  }
+  
+  .navbar-brand {
+    padding: 0;
+    color: #FFF;
+  }
+  
+  .navbar-brand:hover {
+    color: #FFF;
+  }
+  
+  #navbar-links a {
+    color: #FFF;
+  }
+  
+  navbar-expand-lg .navbar-nav .nav-link {
+    padding: 1rem .8rem;
+  }
